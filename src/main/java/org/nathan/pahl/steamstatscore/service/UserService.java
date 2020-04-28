@@ -1,28 +1,27 @@
 package org.nathan.pahl.steamstatscore.service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import org.nathan.pahl.steamstatscore.regex.InputRegex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private final String steamUrlIdRegex = "https://steamcommunity.com/profiles/(\\d+)|(\\d+)";
-    private final String steamUrlUsernameRegex = "https:\\/\\/steamcommunity.com\\/profiles\\/(\\w+)|(\\w+)";
-
-
     private transient final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private InputRegex inputRegex;
+
+    @Autowired
+    public UserService(InputRegex inputRegex) {
+        this.inputRegex = inputRegex;
+    }
+
     public Long parseInputForLong(String input) {
-        Pattern pattern = Pattern.compile(steamUrlIdRegex);
-        Matcher matcher = pattern.matcher(input);
-        matcher.find();
-        String group = matcher.group(1);
+        String toParse = inputRegex.matchSteamId(input);
         try {
-            return Long.parseLong(group);
+            return Long.parseLong(toParse);
         } catch (NumberFormatException e) {
             this.logger.info("User entered string");
         }
@@ -30,10 +29,7 @@ public class UserService {
     }
 
     public String parseInputForUsername(String input) {
-        Pattern pattern = Pattern.compile(steamUrlUsernameRegex);
-        Matcher matcher = pattern.matcher(input);
-        matcher.find();
-        return matcher.group(1);
+        return inputRegex.matchSteamUsername(input);
     }
 
 }

@@ -28,7 +28,7 @@ public class SteamUserBroker {
         this.steamWebApiClient = steamWebApiClient;
     }
 
-    public Long getSteamIdFromString(String username) throws InterruptedException {
+    public Long getSteamIdFromUsername(String username) throws InterruptedException {
         ISteamUser steamUser = new ISteamUser(steamAPI);
         SteamHost host = SteamHost.PUBLIC;
         SteamVersion version = SteamVersion.V_1;
