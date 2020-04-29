@@ -1,6 +1,7 @@
 package org.nathan.pahl.steamstatscore.broker;
 
 import com.lukaspradel.steamapi.core.exception.SteamApiException;
+import com.lukaspradel.steamapi.data.json.friendslist.Friendslist;
 import com.lukaspradel.steamapi.data.json.friendslist.GetFriendList;
 import com.lukaspradel.steamapi.webapi.client.SteamWebApiClient;
 import com.lukaspradel.steamapi.webapi.request.GetFriendListRequest;
@@ -19,9 +20,9 @@ public class SteamFriendsBroker {
         this.steamWebApiClient = steamWebApiClient;
     }
     
-    public GetFriendList getFriendList(Long steamId) throws SteamApiException {
+    public Friendslist getFriendList(Long steamId) throws SteamApiException {
         GetFriendListRequest request = SteamWebApiRequestFactory.createGetFriendListRequest(steamId + "");
-        return steamWebApiClient.processRequest(request);
+        return ((GetFriendList)steamWebApiClient.processRequest(request)).getFriendslist();
     }
 
 }

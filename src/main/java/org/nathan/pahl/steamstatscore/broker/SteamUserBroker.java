@@ -1,6 +1,16 @@
 package org.nathan.pahl.steamstatscore.broker;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.lukaspradel.steamapi.core.exception.SteamApiException;
+import com.lukaspradel.steamapi.data.json.friendslist.GetFriendList;
+import com.lukaspradel.steamapi.data.json.playersummaries.GetPlayerSummaries;
+import com.lukaspradel.steamapi.data.json.playersummaries.Response;
 import com.lukaspradel.steamapi.webapi.client.SteamWebApiClient;
+import com.lukaspradel.steamapi.webapi.request.GetFriendListRequest;
+import com.lukaspradel.steamapi.webapi.request.GetPlayerSummariesRequest;
+import com.lukaspradel.steamapi.webapi.request.builders.SteamWebApiRequestFactory;
 
 import org.nathan.pahl.steamstatscore.SteamIdRetriever;
 import org.nathan.pahl.steamstatscore.service.UserService;
@@ -46,6 +56,11 @@ public class SteamUserBroker {
             throw new RuntimeException("Steam user does not exist");
         }
         return steamId;
+    }
+
+    public Response getPlayerSummaries(List<String> steamIds) throws SteamApiException {
+        GetPlayerSummariesRequest request = SteamWebApiRequestFactory.createGetPlayerSummariesRequest(steamIds);
+        return ((GetPlayerSummaries)steamWebApiClient.processRequest(request)).getResponse();
     }
     
 }
