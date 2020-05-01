@@ -16,6 +16,7 @@ import org.nathan.pahl.steamstatscore.broker.SteamFriendsBroker;
 import org.nathan.pahl.steamstatscore.broker.SteamGamesBroker;
 import org.nathan.pahl.steamstatscore.broker.SteamUserBroker;
 import org.nathan.pahl.steamstatscore.domain.FriendSummary;
+import org.nathan.pahl.steamstatscore.domain.FriendsListResponse;
 import org.nathan.pahl.steamstatscore.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class SteamStatsCoreController {
     }
 
     @GetMapping("/getFriends")
-    public Friendslist getFriends(final String input) throws SteamApiException, InterruptedException {
+    public FriendsListResponse getFriends(final String input) throws SteamApiException, InterruptedException {
         Long steamId = userService.parseInputForLong(input);
         if (steamId == null) {
             final String username = userService.parseInputForUsername(input);
@@ -69,14 +70,10 @@ public class SteamStatsCoreController {
                 .getPlayerSummaries(steamIds);
         Map<String, Player> players = response.getPlayers().stream().collect(Collectors.toMap(Player::getSteamid, Function.identity()));
         List<FriendSummary> friendSummaries = new ArrayList<>();
-        
         steamIds.stream().forEach(id -> {
-            Friend friend = friends.get(id);
-            Player player = players.get(id);
+            friendSummaries.add(new FriendSummary(players.get(id), friends.get(id)));
         });     
-        
-
-        return friendsList;
+        return new FriendsListResponse(friendSummaries);
     }
 
 }
