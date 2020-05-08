@@ -1,0 +1,36 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.ehcache.org/v3"
+    xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
+    xsi:schemaLocation="
+            http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.5.xsd
+            http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.5.xsd">
+
+    <cache alias="ownedGames">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.lukaspradel.steamapi.data.json.ownedgames.Response</value-type>
+        
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+
+        <resources>
+            <heap unit="MB">50</heap>
+            <!-- <offheap unit="MB">10</offheap> // The value-type Response is not serializable! -->
+        </resources>
+    </cache>
+
+    <cache alias="friendsList">
+        <key-type>java.lang.Long</key-type>
+        <value-type>com.lukaspradel.steamapi.data.json.friendslist.Friendslist</value-type>
+        
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+
+        <resources>
+            <heap unit="MB">50</heap>
+            <!-- <offheap unit="MB">10</offheap> // The value-type Friendslist is not serializable! -->
+        </resources>
+    </cache>
+
+</config>

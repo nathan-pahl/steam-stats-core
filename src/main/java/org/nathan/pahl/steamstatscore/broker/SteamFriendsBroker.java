@@ -8,6 +8,7 @@ import com.lukaspradel.steamapi.webapi.request.GetFriendListRequest;
 import com.lukaspradel.steamapi.webapi.request.builders.SteamWebApiRequestFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,10 @@ public class SteamFriendsBroker {
         this.steamWebApiClient = steamWebApiClient;
     }
     
+    @Cacheable(
+        value = "friendsList",
+        key = "#steamId"
+    )
     public Friendslist getFriendList(Long steamId) throws SteamApiException {
         GetFriendListRequest request = SteamWebApiRequestFactory.createGetFriendListRequest(steamId + "");
         return ((GetFriendList)steamWebApiClient.processRequest(request)).getFriendslist();

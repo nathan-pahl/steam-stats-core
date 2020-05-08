@@ -11,6 +11,7 @@ import com.lukaspradel.steamapi.webapi.request.GetOwnedGamesRequest;
 import com.lukaspradel.steamapi.webapi.request.builders.SteamWebApiRequestFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,10 @@ public class SteamGamesBroker {
         this.steamWebApiClient = steamWebApiClient;
     }
 
+    @Cacheable(
+        value = "ownedGames",
+        key = "#steamId"
+    )
     public Response getOwnedGames(Long steamId) throws SteamApiException {
         boolean includeAppInfo = true;
         boolean includePlayedFreeGames = true;

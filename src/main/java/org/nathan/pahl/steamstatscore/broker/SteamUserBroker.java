@@ -15,6 +15,7 @@ import com.lukaspradel.steamapi.webapi.request.builders.SteamWebApiRequestFactor
 import org.nathan.pahl.steamstatscore.SteamIdRetriever;
 import org.nathan.pahl.steamstatscore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import de.SweetCode.SteamAPI.SteamAPI;
