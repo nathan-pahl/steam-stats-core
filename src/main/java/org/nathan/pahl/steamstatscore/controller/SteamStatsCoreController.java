@@ -1,6 +1,7 @@
 package org.nathan.pahl.steamstatscore.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -43,6 +44,24 @@ public class SteamStatsCoreController {
         this.steamUserBroker = steamUserBroker;
         this.steamGamesBroker = steamGamesBroker;
         this.steamFriendsBroker = steamFriendsBroker;
+    }
+
+    @GetMapping("/getPlayerSummary")
+    public FriendsListResponse getPlayerSummary(final String input) throws SteamApiException, InterruptedException {
+        Long steamId = userService.parseInputForLong(input);
+        if (steamId == null) {
+            final String username = userService.parseInputForUsername(input);
+            steamId = steamUserBroker.getSteamIdFromUsername(username);
+        }
+        List<String> steamIds = Arrays.asList(new String[]{steamId + ""});
+        com.lukaspradel.steamapi.data.json.playersummaries.Response response = this.steamUserBroker
+                .getPlayerSummaries(steamIds);
+        Map<String, Player> players = response.getPlayers().stream().collect(Collectors.toMap(Player::getSteamid, Function.identity()));
+        List<FriendSummary> friendSummaries = new ArrayList<>();
+        steamIds.stream().forEach(id -> {
+            friendSummaries.add(new FriendSummary(players.get(id), null));
+        });     
+        return new FriendsListResponse(friendSummaries);
     }
 
     @GetMapping("/getGames")
